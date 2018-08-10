@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PointCfg>
+  <打标站>
+    <Point index="1" name="整流拍照点" x="239763" y="290061" z="-42604" u="" />
+    <Point index="2" name="上料点" x="140000" y="396815" z="-42604" u="" />
+    <Point index="3" name="T1_calib拍照点" x="223763" y="297061" z="-42604" u="" />
+    <Point index="4" name="T1_calib激光中心" x="113163" y="302061" z="-42604" u="" />
+    <Point index="5" name="逆变拍照点" x="211163" y="294561" z="-42604" u="" />
+    <Point index="6" name="T1_calib相机原点" x="246917" y="315440" z="-42604" u="" />
+    <Point index="7" name="T1_4/calib2拍照点" x="239163" y="258561" z="-131204" u="" />
+    <Point index="8" name="T1_calib2相机原点" x="261673" y="278248" z="-131204" u="" />
+    <Point index="9" name="T1_4/calib2激光中心" x="126463" y="267061" z="-140604" u="" />
+    <Point index="10" name="上盖打标点" x="146463" y="195061" z="-140604" u="" />
+    <Point index="11" name="逆变打标点" x="98616" y="285849" z="-47604" u="" />
+    <Point index="12" name="整流8点" x="83992" y="276777" z="-52604" u="" />
+    <Point index="13" name="整流23点" x="143994" y="286789" z="-48604" u="" />
+    <Point index="14" name="整机拍照点" x="302763" y="281061" z="-19604" u="" />
+    <Point index="15" name="整机打标点" x="0" y="0" z="-88604" u="" />
+    <Point index="16" name="其他模块1拍照点" x="211163" y="294561" z="-42604" u="" />
+    <Point index="17" name="其他模块1打标高度Z及XY偏移量" x="0" y="0" z="-48604" u="" />
+    <Point index="18" name="其他模块2拍照点" x="211163" y="294561" z="-42604" u="" />
+    <Point index="19" name="其他模块2打标高度Z及XY偏移量" x="0" y="0" z="-48604" u="" />
+    <Point index="20" name="其他模块3拍照点" x="0" y="0" z="0" u="" />
+    <Point index="21" name="其他模块3打标高度Z及XY偏移量" x="0" y="0" z="0" u="" />
+    <Point index="22" name="其他模块4拍照点" x="0" y="0" z="0" u="" />
+    <Point index="23" name="其他模块4打标高度Z及XY偏移量" x="0" y="0" z="0" u="" />
+    <Point index="24" name="其他模块5拍照点" x="0" y="0" z="0" u="" />
+    <Point index="25" name="其他模块5打标高度Z及XY偏移量" x="0" y="0" z="0" u="" />
+  </打标站>
+  <安全站 />
+</PointCfg>

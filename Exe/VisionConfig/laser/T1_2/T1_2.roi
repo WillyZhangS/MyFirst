@@ -1,0 +1,22 @@
+<roi_coll mode="region" name="Matching 01">
+ <roi name="ModelRegion">
+  <rect2 operation="none">
+   <data len1="0" len2="0" row="0" col="0" phi="0"/>
+  </rect2>
+  <rect2 operation="union">
+   <data len1="0" len2="0" row="0" col="0" phi="0"/>
+  </rect2>
+  <circle operation="union">
+   <data row="360.5" radius="163.63679292873" col="1375.5"/>
+  </circle>
+  <circle operation="difference">
+   <data row="360.5" radius="145.581592242976" col="1375.5"/>
+  </circle>
+  <circle operation="union">
+   <data row="361.454732510288" radius="162.350803408592" col="864.635802469136"/>
+  </circle>
+  <circle operation="difference">
+   <data row="362.87037037037" radius="146.579440830184" col="866.756172839506"/>
+  </circle>
+ </roi>
+</roi_coll>

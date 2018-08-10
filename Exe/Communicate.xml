@@ -1,0 +1,408 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Communicate</name>
+    </assembly>
+    <members>
+        <member name="T:Communicate.ComLink">
+            <summary>
+            串口通讯类封装
+            </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_nComNo">
+             <summary>
+            串口号 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_strName">
+             <summary>
+            串口定义名称 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_nBaudRate">
+             <summary>
+            波特率 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_nDataBit">
+             <summary>
+            数据位 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_strPartiy">
+             <summary>
+            校验位 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_strStopBit">
+             <summary>
+            停止位 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_strFlowCtrl">
+             <summary>
+            流控制 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_nTime">
+             <summary>
+            超时时间 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_nBufferSzie">
+             <summary>
+            缓冲区大小 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_strLineFlag">
+             <summary>
+            命令分隔符标志 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_strLine">
+             <summary>
+            命令分隔符 
+             </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_serialPort">
+            <summary>
+            系统串口类引用
+            </summary>
+        </member>
+        <member name="F:Communicate.ComLink.m_bTimeOut">
+            <summary>
+            读取数据过程中是否已经超时
+            </summary>
+        </member>
+        <member name="M:Communicate.ComLink.#ctor(System.Int32,System.String,System.Int32,System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nComNo"></param>
+            <param name="strName"></param>
+            <param name="nBaudRate"></param>
+            <param name="nDataBit"></param>
+            <param name="strPartiy"></param>
+            <param name="strStopBit"></param>
+            <param name="strFlowCtrl"></param>
+            <param name="nTime"></param>
+            <param name="nBufferSzie"></param>
+            <param name="strLine"></param>
+        </member>
+        <member name="M:Communicate.ComLink.Open">
+             <summary>
+            打开串口
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.ComLink.IsOpen">
+            <summary>
+            判断是否已经打开
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Communicate.ComLink.IsTimeOut">
+            <summary>
+            判断是否超时
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Communicate.ComLink.WriteData(System.Byte[],System.Int32)">
+             <summary>
+            向串口写入数据 
+             </summary>
+             <param name="sendBytes"></param>
+             <param name="nLen"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.ComLink.WriteString(System.String)">
+             <summary>
+            向串口写入字符串 
+             </summary>
+             <param name="strData"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.ComLink.WriteLine(System.String)">
+             <summary>
+            向串口写入一行字符 
+             </summary>
+             <param name="strData"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.ComLink.ReadData(System.Byte[],System.Int32)">
+             <summary>
+            从串口读取数据 
+             </summary>
+             <param name="bytes"></param>
+             <param name="nLen"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.ComLink.ReadLine(System.String@)">
+             <summary>
+            从串口读取一行数据 
+             </summary>
+             <param name="strData"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.ComLink.Close">
+             <summary>
+            关闭串口 
+             </summary>
+        </member>
+        <member name="M:Communicate.ComLink.ClearBuffer(System.Boolean,System.Boolean)">
+            <summary>
+            清除缓冲区
+            </summary>
+            <param name="bIn">是否清除输入缓冲区</param>
+            <param name="bOut">是否清除输出缓冲区</param>
+        </member>
+        <member name="E:Communicate.ComLink.StateChangedEvent">
+            <summary>
+            定义状态变更事件
+            </summary>
+        </member>
+        <member name="T:Communicate.ComLink.StateChangedHandler">
+            <summary>
+            状态变更委托
+            </summary>
+            <param name="com"></param>
+        </member>
+        <member name="T:Communicate.ComMgr">
+            <summary>
+            串口系统管理类
+            </summary>
+        </member>
+        <member name="F:Communicate.ComMgr.m_strDescribe">
+            <summary>
+            串口定义描述
+            </summary>
+        </member>
+        <member name="F:Communicate.ComMgr.m_listComLink">
+            <summary>
+            串口定义列表
+            </summary>
+        </member>
+        <member name="M:Communicate.ComMgr.ReadCfgFromXml(System.Xml.XmlDocument)">
+            <summary>
+            从xml文件中读取定义的串口信息
+            </summary>
+            <param name="doc">已打开的xml文档</param>
+        </member>
+        <member name="M:Communicate.ComMgr.UpdateGridFromParam(System.Windows.Forms.DataGridView)">
+            <summary>
+            跟新内存参数到表格数据
+            </summary>
+            <param name="grid">界面串口表格控件</param>
+        </member>
+        <member name="M:Communicate.ComMgr.UpdateParamFromGrid(System.Windows.Forms.DataGridView)">
+            <summary>
+            更新表格数据到内存参数
+            </summary>
+            <param name="grid">界面串口表格控件</param>
+        </member>
+        <member name="M:Communicate.ComMgr.SaveCfgXML(System.Xml.XmlDocument)">
+            <summary>
+            保存内存参数到xml文件
+            </summary>
+            <param name="doc">已打开的xml文档</param>
+        </member>
+        <member name="M:Communicate.ComMgr.GetComLink(System.Int32)">
+            <summary>
+            返回对应索引的对象
+            </summary>
+            <param name="nIndex">索引号</param>
+            <returns></returns>
+        </member>
+        <member name="P:Communicate.ComMgr.Count">
+            <summary>
+            获取系统串口总数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Communicate.TcpLink">
+            <summary>
+            网络连接封装类
+            </summary>
+        </member>
+        <member name="F:Communicate.TcpLink.m_nIndex">
+             <summary>
+            网口号 
+             </summary>
+        </member>
+        <member name="F:Communicate.TcpLink.m_strName">
+             <summary>
+            网口定义 
+             </summary>
+        </member>
+        <member name="F:Communicate.TcpLink.m_strIP">
+             <summary>
+            对方IP地址 
+             </summary>
+        </member>
+        <member name="F:Communicate.TcpLink.m_nPort">
+             <summary>
+            端口号 
+             </summary>
+        </member>
+        <member name="F:Communicate.TcpLink.m_nTime">
+             <summary>
+            超时时间 
+             </summary>
+        </member>
+        <member name="F:Communicate.TcpLink.m_strLineFlag">
+             <summary>
+            命令分隔 
+             </summary>
+        </member>
+        <member name="F:Communicate.TcpLink.m_strLine">
+             <summary>
+            命令分隔符 
+             </summary>
+        </member>
+        <member name="M:Communicate.TcpLink.#ctor(System.Int32,System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nIndex"></param>
+            <param name="strName"></param>
+            <param name="strIP"></param>
+            <param name="nPort"></param>
+            <param name="nTime"></param>
+            <param name="strLine"></param>
+        </member>
+        <member name="M:Communicate.TcpLink.IsTimeOut">
+            <summary>
+            判断是否超时
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Communicate.TcpLink.CallBackMethod(System.IAsyncResult)">
+             <summary>
+            网口打开时通过回调检测是否连接超时。 5秒种 
+             </summary>
+             <param name="asyncResult"></param>
+        </member>
+        <member name="M:Communicate.TcpLink.Open">
+             <summary>
+            打开网口 
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.TcpLink.IsOpen">
+            <summary>
+            判断网口是否打开
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Communicate.TcpLink.WriteData(System.Byte[],System.Int32)">
+             <summary>
+            向网口写入数据 
+             </summary>
+             <param name="sendBytes"></param>
+             <param name="nLen"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.TcpLink.WriteString(System.String)">
+             <summary>
+            向网口写入字符串 
+             </summary>
+             <param name="strData"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.TcpLink.WriteLine(System.String)">
+             <summary>
+            向网口写入一行字符 
+             </summary>
+             <param name="strData"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.TcpLink.ReadData(System.Byte[],System.Int32)">
+             <summary>
+            从网口读取数据 
+             </summary>
+             <param name="bytes"></param>
+             <param name="nLen"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.TcpLink.ReadLine(System.String@)">
+             <summary>
+            从网口读取一行数据 
+             </summary>
+             <param name="strData"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Communicate.TcpLink.Close">
+             <summary>
+            关闭网口 
+             </summary>
+        </member>
+        <member name="M:Communicate.TcpLink.ClearBuffer">
+            <summary>
+            清除缓冲区
+            </summary>
+        </member>
+        <member name="E:Communicate.TcpLink.StateChangedEvent">
+            <summary>
+            状态变更委托事件
+            </summary>
+        </member>
+        <member name="T:Communicate.TcpLink.StateChangedHandler">
+            <summary>
+            状态变更委托函数定义
+            </summary>
+            <param name="tcp"></param>
+        </member>
+        <member name="T:Communicate.TcpMgr">
+            <summary>
+            网口类管理器
+            </summary>
+        </member>
+        <member name="F:Communicate.TcpMgr.m_strDescribe">
+            <summary>
+            网口描述定义
+            </summary>
+        </member>
+        <member name="F:Communicate.TcpMgr.m_listTcpLink">
+            <summary>
+            网络连接列表
+            </summary>
+        </member>
+        <member name="M:Communicate.TcpMgr.GetTcpLink(System.Int32)">
+            <summary>
+            返回对应索引号的对象
+            </summary>
+            <param name="index">网口索引号</param>
+            <returns></returns>
+        </member>
+        <member name="M:Communicate.TcpMgr.ReadCfgFromXml(System.Xml.XmlDocument)">
+            <summary>
+            从xml文件中读取定义的网口信息
+            </summary>
+            <param name="doc">已打开的xml文档</param>
+        </member>
+        <member name="M:Communicate.TcpMgr.UpdateGridFromParam(System.Windows.Forms.DataGridView)">
+            <summary>
+            跟新内存参数到表格数据
+            </summary>
+            <param name="grid">界面网口表格控件</param>
+        </member>
+        <member name="M:Communicate.TcpMgr.UpdateParamFromGrid(System.Windows.Forms.DataGridView)">
+            <summary>
+            跟新表格数据到内存参数
+            </summary>
+            <param name="grid">界面网口表格控件</param>
+        </member>
+        <member name="M:Communicate.TcpMgr.SaveCfgXML(System.Xml.XmlDocument)">
+            <summary>
+            保存内存参数到xml文件
+            </summary>
+            <param name="doc">已打开的xml文档</param>
+        </member>
+        <member name="P:Communicate.TcpMgr.Count">
+            <summary>
+            获取系统中网络连接总数
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

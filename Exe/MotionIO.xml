@@ -1,0 +1,986 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MotionIO</name>
+    </assembly>
+    <members>
+        <member name="T:MotionIO.IoCtrl">
+            <summary>
+            IO卡基类
+            </summary>
+        </member>
+        <member name="F:MotionIO.IoCtrl.m_nIndex">
+             <summary>
+            卡在系统中的序号 
+             </summary>
+        </member>
+        <member name="F:MotionIO.IoCtrl.m_nCardNo">
+             <summary>
+            卡号 
+             </summary>
+        </member>
+        <member name="F:MotionIO.IoCtrl.m_nInData">
+             <summary>
+            输入点状态缓存区 
+             </summary>
+        </member>
+        <member name="F:MotionIO.IoCtrl.m_bDataChange">
+            <summary>
+            输入缓冲区数据是否有变化
+            </summary>
+        </member>
+        <member name="F:MotionIO.IoCtrl.m_nOutData">
+             <summary>
+            输出点状态缓存区 
+             </summary>
+        </member>
+        <member name="F:MotionIO.IoCtrl.m_bEnable">
+             <summary>
+            卡的有无效状态 
+             </summary>
+        </member>
+        <member name="F:MotionIO.IoCtrl.m_strArrayIn">
+             <summary>
+            输入点名称向量 
+             </summary>
+        </member>
+        <member name="F:MotionIO.IoCtrl.m_strArrayOut">
+             <summary>
+            输出点名称向量 
+             </summary>
+        </member>
+        <member name="F:MotionIO.IoCtrl.m_strCardName">
+            <summary>
+            卡名称
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl.#ctor(System.Int32,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nIndex"></param>
+            <param name="nCardNo"></param>
+        </member>
+        <member name="P:MotionIO.IoCtrl.CountIoIn">
+            <summary>
+            输入点总个数
+            </summary>
+        </member>
+        <member name="P:MotionIO.IoCtrl.CountIoOut">
+            <summary>
+            输出点总个数 
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl.IsEnable">
+            <summary>
+            卡是否启用成功
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.IsDataChange">
+            <summary>
+            判断输入缓冲区是否有变化
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.Init">
+             <summary>
+            初始化 
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.DeInit">
+             <summary>
+            释放IO卡 
+             </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl.ReadIOIn(System.Int32@)">
+             <summary>
+            获取卡所有的输入信号 
+             </summary>
+             <param name="nData"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.ReadIOOut(System.Int32@)">
+             <summary>
+            获取卡所有的输出信号 
+             </summary>
+             <param name="nData"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.ReadIoInBit(System.Int32)">
+             <summary>
+            按位获取输入信号 
+             </summary>
+             <param name="nIndex"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.ReadIoOutBit(System.Int32)">
+             <summary>
+            按位获取输出信号 
+             </summary>
+             <param name="nIndex"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.WriteIoBit(System.Int32,System.Boolean)">
+            <summary>
+            按位输出信号 
+            </summary>
+            <param name="nIndex"></param>
+            <param name="bBit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.WriteIo(System.Int32)">
+            <summary>
+            输出整个卡的信号 
+            </summary>
+            <param name="nData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.GetIoInState(System.Int32)">
+             <summary>
+            获取指定IO输入点的缓冲状态 
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl.GetIoOutState(System.Int32)">
+             <summary>
+            获取指定IO输出点的缓冲状态  
+             </summary>
+             <param name="nIndex"></param>
+             <returns></returns>
+        </member>
+        <member name="T:MotionIO.IoCtrl_7230">
+            <summary>
+            凌华7230 IO卡, 类名必须以"IoCtrl_"前导，否则加载不到
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl_7230.#ctor(System.Int32,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nIndex"></param>
+            <param name="nCardNo"></param>
+        </member>
+        <member name="M:MotionIO.IoCtrl_7230.Init">
+            <summary>
+            初始化
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_7230.DeInit">
+            <summary>
+            释放IO卡
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl_7230.ReadIOIn(System.Int32@)">
+            <summary>
+            获取输入信号
+            </summary>
+            <param name="nData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_7230.ReadIoInBit(System.Int32)">
+            <summary>
+            获取输入信号
+            </summary>
+            <param name="nIndex">输入信号位</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_7230.ReadIOOut(System.Int32@)">
+            <summary>
+            获取输出信号
+            </summary>
+            <param name="nData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_7230.ReadIoOutBit(System.Int32)">
+            <summary>
+            获取输出信号
+            </summary>
+            <param name="nIndex">输出点位</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_7230.WriteIoBit(System.Int32,System.Boolean)">
+            <summary>
+            输出信号
+            </summary>
+            <param name="nIndex">输出点</param>
+            <param name="bBit">输出值</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_7230.WriteIo(System.Int32)">
+            <summary>
+            输出信号
+            </summary>
+            <param name="nData">输出信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:MotionIO.IoCtrl_8254">
+            <summary>
+            凌华8254自带的IO控制,20进20出，类名必须以"IoCtrl_"前导，否则加载不到
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl_8254.#ctor(System.Int32,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nIndex">索引号</param>
+            <param name="nCardNo">卡号</param>
+        </member>
+        <member name="M:MotionIO.IoCtrl_8254.Init">
+            <summary>
+            初始化
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_8254.DeInit">
+            <summary>
+            反初始化
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl_8254.ReadIOIn(System.Int32@)">
+            <summary>
+            获取输入信号
+            </summary>
+            <param name="nData">输入信号信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_8254.ReadIoInBit(System.Int32)">
+            <summary>
+            获取输入信号
+            </summary>
+            <param name="nIndex">输入信号位</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_8254.ReadIoOutBit(System.Int32)">
+            <summary>
+            获取输出信号
+            </summary>
+            <param name="nIndex">输出点位</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_8254.ReadIOOut(System.Int32@)">
+            <summary>
+            获取输出信号
+            </summary>
+            <param name="nData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_8254.WriteIoBit(System.Int32,System.Boolean)">
+            <summary>
+            输出信号
+            </summary>
+            <param name="nIndex">输出点</param>
+            <param name="bBit">输出值</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_8254.WriteIo(System.Int32)">
+            <summary>
+            输出行信号
+            </summary>
+            <param name="nData">输出信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:MotionIO.IoCtrl_M400">
+            <summary>
+            secote 运动控制卡自带的IO控制,20进20, 类名必须以"IoCtrl_"前导，否则加载不到
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl_M400.#ctor(System.Int32,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nIndex"></param>
+            <param name="nCardNo"></param>
+        </member>
+        <member name="M:MotionIO.IoCtrl_M400.Init">
+            <summary>
+            初始化
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_M400.DeInit">
+            <summary>
+            释放IO卡
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl_M400.ReadIOIn(System.Int32@)">
+            <summary>
+            获取输入信号
+            </summary>
+            <param name="nData">输入信号信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_M400.ReadIoInBit(System.Int32)">
+            <summary>
+            获取输入信号
+            </summary>
+            <param name="nIndex">输入信号位</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_M400.ReadIOOut(System.Int32@)">
+            <summary>
+            获取输出信号
+            </summary>
+            <param name="nData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_M400.ReadIoOutBit(System.Int32)">
+            <summary>
+            获取输出信号
+            </summary>
+            <param name="nIndex">输出点位</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_M400.WriteIoBit(System.Int32,System.Boolean)">
+            <summary>
+            输出信号
+            </summary>
+            <param name="nIndex">输出点</param>
+            <param name="bBit">输出值</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_M400.WriteIo(System.Int32)">
+            <summary>
+            输出信号
+            </summary>
+            <param name="nData">输出信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:MotionIO.IoCtrl_P230">
+            <summary>
+            secote IO卡,16进16出, 类名必须以"IoCtrl_"前导，否则加载不到
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl_P230.#ctor(System.Int32,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nIndex"></param>
+            <param name="nCardNo">卡号</param>
+        </member>
+        <member name="M:MotionIO.IoCtrl_P230.Init">
+            <summary>
+            初始化
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_P230.DeInit">
+            <summary>
+            释放IO卡
+            </summary>
+        </member>
+        <member name="M:MotionIO.IoCtrl_P230.ReadIOIn(System.Int32@)">
+            <summary>
+            获取输入信号
+            </summary>
+            <param name="nData">输入信号信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_P230.ReadIoInBit(System.Int32)">
+            <summary>
+            获取输入信号
+            </summary>
+            <param name="nIndex">输入信号位</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_P230.ReadIOOut(System.Int32@)">
+            <summary>
+            获取输出信号
+            </summary>
+            <param name="nData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_P230.ReadIoOutBit(System.Int32)">
+            <summary>
+            获取输出信号
+            </summary>
+            <param name="nIndex">输出点位</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_P230.WriteIoBit(System.Int32,System.Boolean)">
+            <summary>
+            输出信号
+            </summary>
+            <param name="nIndex">输出点</param>
+            <param name="bBit">输出值</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.IoCtrl_P230.WriteIo(System.Int32)">
+            <summary>
+            输出信号
+            </summary>
+            <param name="nData">输出信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:MotionIO.Motion">
+            <summary>
+            运动控制卡封装基类
+            </summary>
+        </member>
+        <member name="F:MotionIO.Motion.m_bEnable">
+            <summary>
+            判定卡是否启用或初始化成功
+            </summary>
+        </member>
+        <member name="F:MotionIO.Motion.m_nCardIndex">
+            <summary>
+            当前卡在系统中的索引号
+            </summary>
+        </member>
+        <member name="F:MotionIO.Motion.m_strName">
+            <summary>
+            卡类型名称
+            </summary>
+        </member>
+        <member name="F:MotionIO.Motion.m_nMinAxisNo">
+            <summary>
+            卡类型支持的最小轴号
+            </summary>
+        </member>
+        <member name="F:MotionIO.Motion.m_nMaxAxisNo">
+            <summary>
+            卡类型支持的最大轴号
+            </summary>
+        </member>
+        <member name="M:MotionIO.Motion.#ctor(System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            构造初始化
+            </summary>
+            <param name="nCardIndex"></param>
+            <param name="strName"></param>
+            <param name="nMinAxisNo"></param>
+            <param name="nMaxAxisNo"></param>
+        </member>
+        <member name="M:MotionIO.Motion.IsEnable">
+            <summary>
+            卡是否启用成功
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.AbsMove(System.Int32,System.Int32,System.Int32)">
+             <summary>
+            以绝对位置移动 
+             </summary>
+             <param name="nAxisNo"></param>
+             <param name="nPos"></param>
+             <param name="nSpeed"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.RelativeMove(System.Int32,System.Int32,System.Int32)">
+             <summary>
+            相对位置移动
+             </summary>
+             <param name="nAxisNo"></param>
+             <param name="nPos"></param>
+             <param name="nSpeed"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.VelocityMove(System.Int32,System.Int32)">
+             <summary>
+            速度模式
+             </summary>
+             <param name="nAxisNo"></param>
+             <param name="nSpeed"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.JogMove(System.Int32,System.Boolean,System.Int32,System.Int32)">
+             <summary>
+            jog运动 
+             </summary>
+             <param name="axis"></param>
+             <param name="bPositive"></param>
+             <param name="bStrat"></param>
+             <param name="nSpeed"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.GetMotionState(System.Int32)">
+             <summary>
+            获取轴卡运动状态 
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.GetMotionIoState(System.Int32)">
+             <summary>
+            获取轴卡运动IO信号 
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.GetAixsPos(System.Int32)">
+             <summary>
+            获取轴的当前位置 
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.IsAxisNormalStop(System.Int32)">
+             <summary>
+            轴是否正常停止 
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.IsAxisInPos(System.Int32)">
+            <summary>
+            轴号是否在范围内
+            </summary>
+            <param name="nAxisNo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.Home(System.Int32,System.Int32)">
+             <summary>
+            回原点
+             </summary>
+             <param name="nAxisNo"></param>
+             <param name="nDir"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.SetPosZero(System.Int32)">
+             <summary>
+            位置置零 
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.ServoOn(System.Int32)">
+             <summary>
+            开启使能 
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.ServoOff(System.Int32)">
+             <summary>
+            断开使能 
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.GetServoState(System.Int32)">
+            <summary>
+            读取伺服使能状态 
+            </summary>
+            <param name="nAxisNo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.StopAxis(System.Int32)">
+             <summary>
+            轴正常停止
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.StopEmg(System.Int32)">
+             <summary>
+            急停 
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.Init">
+             <summary>
+            轴卡初始化 
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.DeInit">
+             <summary>
+            关闭轴卡 
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.IsHomeNormalStop(System.Int32)">
+            <summary>
+            回原点是否正常停止
+            </summary>
+            <param name="nAxisNo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.GetCardName">
+             <summary>
+            获取运动控制卡名称 
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.GetMinAxisNo">
+            <summary>
+            获取最小轴号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.GetMaxAxisNo">
+            <summary>
+            //获取最大轴号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.AxisInRang(System.Int32)">
+            <summary>
+            判断当前轴号是否属于此卡
+            </summary>
+            <param name="nAxisNo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion.GetCardIndex">
+            <summary>
+            获取卡的系统索引号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MotionIO.Motion_8254">
+            <summary>
+            8254运动控制卡封装,类名必须以"Motion_"前导，否则加载不到
+            </summary>
+        </member>
+        <member name="M:MotionIO.Motion_8254.#ctor(System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>构造函数
+            
+            </summary>
+            <param name="nCardIndex"></param>
+            <param name="strName"></param>
+            <param name="nMinAxisNo"></param>
+            <param name="nMaxAxisNo"></param>
+        </member>
+        <member name="M:MotionIO.Motion_8254.Init">
+            <summary>
+            轴卡初始化
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.DeInit">
+            <summary>
+            关闭轴卡
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.ServoOn(System.Int32)">
+            <summary>
+            给予使能
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.ServoOff(System.Int32)">
+            <summary>
+            断开使能
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.GetServoState(System.Int32)">
+            <summary>
+            读取伺服使能状态
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.Home(System.Int32,System.Int32)">
+            <summary>
+            回原点
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <param name="nDir">回原点方式</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.AbsMove(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            以绝对位置移动
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <param name="nPos">位置</param>
+            <param name="nSpeed">速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.RelativeMove(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            相对位置移动
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <param name="nPos">位置</param>
+            <param name="nSpeed">速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.JogMove(System.Int32,System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            JOG运动
+            </summary>
+            <param name="axis">轴号</param>
+            <param name="bPositive">方向</param>
+            <param name="bStart">开始标志</param>
+            <param name="nSpeed">速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.StopAxis(System.Int32)">
+            <summary>
+            轴正常停止
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.StopEmg(System.Int32)">
+            <summary>
+            急停
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.GetMotionState(System.Int32)">
+            <summary>
+            获取轴卡运动状态
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.GetMotionIoState(System.Int32)">
+            <summary>
+            获取轴卡运动IO信号
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.GetAixsPos(System.Int32)">
+            <summary>
+            获取轴的当前位置
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.IsAxisNormalStop(System.Int32)">
+            <summary>
+            轴是否正常停止
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns>0:正常信止, -1:未知异常 其它:急停,报警等</returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.IsAxisInPos(System.Int32)">
+            <summary>
+            判断轴是否到位
+            </summary>
+            <param name="nAxisNo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.SetPosZero(System.Int32)">
+            <summary>
+            位置清零
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.VelocityMove(System.Int32,System.Int32)">
+            <summary>
+            速度模式旋转轴
+            </summary>
+            <param name="nAxisNo"></param>
+            <param name="nSpeed"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_8254.IsHomeNormalStop(System.Int32)">
+             <summary>
+            此函数8254板卡不提供不使用,回原点内部已经封装好过程处理 
+             </summary>
+             <param name="nAxisNo"></param>
+             <returns></returns>
+        </member>
+        <member name="T:MotionIO.SctCardCollect">
+            <summary>
+            记录所有的secote card 内部序号与外部序号的关系
+            </summary>
+        </member>
+        <member name="F:MotionIO.SctCardCollect.SctCardCountMax">
+            <summary>
+            系统支持 secote card 的最大数量
+            </summary>
+        </member>
+        <member name="F:MotionIO.SctCardCollect.MotionM400List">
+            <summary>
+            记录M400运动控制卡：内部序号+外部序号
+            </summary>
+        </member>
+        <member name="F:MotionIO.SctCardCollect.IoM400List">
+            <summary>
+            记录M400的IO卡：内部序号+外部序号
+            </summary>
+        </member>
+        <member name="F:MotionIO.SctCardCollect.IoP2300List">
+            <summary>
+            记录P230卡：内部序号+外部序号
+            </summary>
+        </member>
+        <member name="M:MotionIO.SctCardCollect.#ctor">
+            <summary>
+            构造函数，列举所有的M400卡、P230卡
+            </summary>
+        </member>
+        <member name="M:MotionIO.SctCardCollect.Instance">
+            <summary>
+            实例引用
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MotionIO.Motion_M400">
+            <summary>
+            secote 4轴运动控制卡, 类名必须以"Motion_"前导，否则加载不到
+            </summary>
+        </member>
+        <member name="M:MotionIO.Motion_M400.#ctor(System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="nCardIndex"></param>
+            <param name="strName"></param>
+            <param name="nMinAxisNo"></param>
+            <param name="nMaxAxisNo"></param>
+        </member>
+        <member name="M:MotionIO.Motion_M400.Init">
+            <summary>
+            轴卡初始化
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.DeInit">
+            <summary>
+            关闭轴卡
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.ServoOn(System.Int32)">
+            <summary>
+            给予使能
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.ServoOff(System.Int32)">
+            <summary>
+            断开使能
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.GetServoState(System.Int32)">
+            <summary>
+            读取伺服使能状态
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.Home(System.Int32,System.Int32)">
+            <summary>
+            回原点
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <param name="nDir">回原点方式</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.SetSpeed(System.Int32,System.Int32)">
+            <summary>
+            设置轴的移动速度
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <param name="nSpeed">速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.AbsMove(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            以绝对位置移动
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <param name="nPos">位置</param>
+            <param name="nSpeed">速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.RelativeMove(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            相对位置移动
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <param name="nPos">位置</param>
+            <param name="nSpeed">速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.JogMove(System.Int32,System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            JOG运动
+            </summary>
+            <param name="axis">轴号</param>
+            <param name="bPositive">方向</param>
+            <param name="bStart">未使用</param>
+            <param name="nSpeed">速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.StopAxis(System.Int32)">
+            <summary>
+            轴正常停止
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.StopEmg(System.Int32)">
+            <summary>
+            急停
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.GetMotionState(System.Int32)">
+            <summary>
+            获取轴卡运动状态
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.GetMotionIoState(System.Int32)">
+            <summary>
+            获取轴卡运动IO信号
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.GetAixsPos(System.Int32)">
+            <summary>
+            获取轴的当前位置
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.IsAxisNormalStop(System.Int32)">
+            <summary>
+            轴是否正常停止
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.IsAxisInPos(System.Int32)">
+            <summary>
+            判定轴是否到位
+            </summary>
+            <param name="nAxisNo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.SetPosZero(System.Int32)">
+            <summary>
+            位置清零
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.VelocityMove(System.Int32,System.Int32)">
+            <summary>
+            速度模式旋转轴
+            </summary>
+            <param name="nAxisNo">轴号</param>
+            <param name="nSpeed">速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:MotionIO.Motion_M400.IsHomeNormalStop(System.Int32)">
+            <summary>
+            回原点是否正常停止
+            </summary>
+            <param name="nAxisNo"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

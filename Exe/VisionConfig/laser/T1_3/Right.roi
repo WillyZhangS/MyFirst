@@ -1,0 +1,7 @@
+<roi_coll mode="region" name="Matching 01">
+ <roi name="ModelRegion">
+  <rect2 operation="none">
+   <data len1="12.94610778443121" len2="442.4844026060071" row="677.2265901060071" col="1925.796407185629" phi="0"/>
+  </rect2>
+ </roi>
+</roi_coll>

@@ -1,0 +1,2331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.1" halcon_version="12.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>dev_open_window(0, 0, 800, 640, 'black', window)</l>
+<c>*产品类型</c>
+<l>nSelect := 'T1_11'</l>
+<l>Product := 'laser'</l>
+<c>*文件路径</c>
+<l>dir := 'E:/项目归档/自动化框架/框架/HC Marking/AutoFrame/Exe/VisionConfig/'</l>
+<c>*产品路径</c>
+<l>dir := dir + Product +'/'+ nSelect</l>
+<c>*初始化模板</c>
+<l>InitTemplete (dir , ModelId, ModelData)</l>
+<c>*遍历文件夹，查找所有图片类型</c>
+<l>list_files (dir,['files','recursive','follow_links'], ImageFiles)</l>
+<l>tuple_regexp_select (ImageFiles, ['\\.(tif|tiff|gif|bmp|jpg|jpeg|\
+                     jp2|png|pcx|pgm|ppm|pbm|xwd|ima)$',\
+                     'ignore_case'], ImageFiles)</l>
+<c>*处理文件夹内所有图片</c>
+<l>for Index := 0 to |ImageFiles| - 1 by 1</l>
+<l>     read_image (Image, ImageFiles[Index])</l>
+<l>     dev_set_draw('margin')</l>
+<l>     get_image_size(Image, Width, Height)</l>
+<l>     dev_display(Image)</l>
+<l>     if(nSelect == 'T1_1')</l>
+<c>         *处理指定类型工件，找出关键点坐标并提取显示。</c>
+<l>         T1_1 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     elseif (nSelect == 'T1_2')  </l>
+<l>         T1_2 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     elseif (nSelect == 'T1_3')</l>
+<l>         T1_3 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     elseif (nSelect == 'T1_4')</l>
+<l>         T1_4 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<c>*****************新增模块处理步骤共预留16个***********************</c>
+<l>     elseif (nSelect == 'T1_10')</l>
+<l>         T1_10 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     elseif (nSelect == 'T1_11')</l>
+<l>         T1_11 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     elseif (nSelect == 'T1_12')</l>
+<l>         T1_12 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     elseif (nSelect == 'T1_13')</l>
+<l>         T1_13 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     elseif (nSelect == 'T1_14')</l>
+<l>         T1_14 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     elseif (nSelect == 'T1_15')</l>
+<l>         T1_15 (Image, dir, ModelId, ModelData, TupleResult)     </l>
+<l>     elseif (nSelect == 'T1_16')</l>
+<l>         T1_16 (Image, dir, ModelId, ModelData, TupleResult)     </l>
+<l>     elseif (nSelect == 'T1_17')</l>
+<l>         T1_17 (Image, dir, ModelId, ModelData, TupleResult)     </l>
+<l>     elseif (nSelect == 'T1_18')</l>
+<l>         T1_18 (Image, dir, ModelId, ModelData, TupleResult)     </l>
+<l>     elseif (nSelect == 'T1_19')</l>
+<l>         T1_19 (Image, dir, ModelId, ModelData, TupleResult)     </l>
+<l>     elseif (nSelect == 'T1_20')</l>
+<l>         T1_20 (Image, dir, ModelId, ModelData, TupleResult)     </l>
+<l>     elseif (nSelect == 'T1_21')</l>
+<l>         T1_21 (Image, dir, ModelId, ModelData, TupleResult)     </l>
+<l>     elseif (nSelect == 'T1_22')</l>
+<l>         T1_22 (Image, dir, ModelId, ModelData, TupleResult)     </l>
+<l>     elseif (nSelect == 'T1_23')</l>
+<l>         T1_23 (Image, dir, ModelId, ModelData, TupleResult)         </l>
+<l>     elseif (nSelect == 'T1_24')</l>
+<l>         T1_24 (Image, dir, ModelId, ModelData, TupleResult)         </l>
+<l>     elseif (nSelect == 'T1_25')</l>
+<l>         T1_25 (Image, dir, ModelId, ModelData, TupleResult)         </l>
+<c>************************标定处理步骤*********************************</c>
+<l>     elseif (nSelect == 'T1_calib')</l>
+<l>         T1_calib (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     elseif (nSelect == 'T1_calib2')</l>
+<l>         T1_calib2 (Image, dir, ModelId, ModelData, TupleResult)</l>
+<l>     endif</l>
+<c>*等待一段时间s</c>
+<l>wait_seconds(0.1)</l>
+<l>endfor</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+<procedure name="T1_1">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_1">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_2">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<c>*先赋值，以免发生异常后读取非法内存</c>
+<l>* TupleResult := -999 </l>
+<c>*读取ROI,旋转矩形,带方向角度,判断举行区域面积,盖子没掀开时亮度高   </c>
+<l>*     ReadRoiRectangle2 (Directory + '/rect.roi', RoiDataIn)</l>
+<c>     *根据模板查找的座标来转换ROI</c>
+<l>*     TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<l>*     gen_rectangle2(RectRegion, RoiDataOut[0],RoiDataOut[1],RoiDataOut[2],RoiDataOut[3],RoiDataOut[4])</l>
+<l>*     dev_display(RectRegion)</l>
+<l>*     maxArea := RoiDataOut[3]*RoiDataOut[4]*4</l>
+<l>*     reduce_domain(Image, RectRegion, ImageReduced)</l>
+<l>*     threshold(ImageReduced, Region1, 50, 255)</l>
+<l>*     connection(Region1, ConnectedRegions)</l>
+<l>*     select_shape(Region1, SelectedRegions, 'area', 'and',maxArea*0.8, maxArea*1.1)</l>
+<l>*     count_obj(SelectedRegions, Number)</l>
+<l>*     if(Number == 1)</l>
+<l>*         dev_disp_message( 'cover is take ok!', 'window', 40, 20, 'green', 'false')</l>
+<l>*         TupleResult := [1]</l>
+<l>*        stop()</l>
+<l>*         return()</l>
+<l>*     else</l>
+<l>*         TupleResult := -999</l>
+<l>*         dev_disp_message( 'cover is take wrong!', 'window', 40, 20, 'red', 'false')</l>
+<l>*     endif</l>
+<c></c>
+<l>* return ()</l>
+<c></c>
+<l>TupleResult := -999 </l>
+<l>FindTemplete (Image, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<l>        dev_disp_message( 'cover is take ok!', 'window', 40, 20, 'green', 'false')</l>
+<l>        TupleResult := [1]</l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          dev_disp_message( 'cover is take wrong!', 'window', 40, 20, 'red', 'false')</l>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<l>return ()</l>
+<c></c>
+<c></c>
+</body>
+<docu id="T1_2">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory"/>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData"/>
+<parameter id="ModelId"/>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_3">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<c>*先赋值，以免发生异常后读取非法内存</c>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<c></c>
+<l>gen_rectangle1 (ROI_0, 50.55, 50.447, 1569.19, 2058.33)</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c></c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(Score &gt;0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Bottom.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>*         hom_mat2d_identity(FixTool)</l>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>        *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' BottomLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Left.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'positive', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>        </c>
+<c>        </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin3, ColBegin3, RowEnd3, ColEnd3)         </l>
+<l>        if(|RowBegin3| = 0)</l>
+<l>          TupleResult := -996</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' RightLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd3, ColEnd3, RowBegin3, ColBegin3,  Angle3)</l>
+<l>        Angle3 := deg(Angle3) </l>
+<c>        </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, RowP1, ColP1, IsOverlapping)</l>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin3, ColBegin3, RowEnd3, ColEnd3, RowP2, ColP2, IsOverlapping)</l>
+<l>        Row := (RowP1+RowP2)/2</l>
+<l>        Col := (ColP1+ColP2)/2</l>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle3= '+ Angle3, 'window', 120, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 140, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle3-Angle= '+ (Angle3-Angle), 'window', 160, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<l>* else</l>
+<l>*         dev_disp_message( 'No bottom Panle', 'window', 40, 20, 'green', 'false')</l>
+<l>*      TupleResult := -1000 </l>
+<l>* endif</l>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_3">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_4">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<c>*先赋值，以免发生异常后读取非法内存</c>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<c></c>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c></c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>if(|Score|&gt;0)</l>
+<c>        *读取第一个ROI,圆环  </c>
+<l>        ReadRoiAnnularCircle (Directory +  '/T1_4.roi', RoiDataIn)</l>
+<c>        *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut) </l>
+<c>        *查找圆,方向outer指定由外向内,以大圆半径为中心,100个点,可排除20个干扰点,阈值5,</c>
+<c>        *平滑系数0.4, 由白到黑,取第一点</c>
+<l>        FindCircle (Image, RoiDataOut, 'inner', 100, 20, 5, 0.4,\
+                    'positive', 'first', Row, Col, Radius)</l>
+<c>        </c>
+<l>        if(|Row| = 0)</l>
+<l>            TupleResult := -998</l>
+<l>            return()</l>
+<l>        endif</l>
+<c>        </c>
+<l>        gen_cross_contour_xld(Cross,Row,Col,60,0.785398)</l>
+<c>        </c>
+<l>        dev_disp_message ('row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>        dev_disp_message ('col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>*         dev_disp_message( 'Angle= '+ Angle, 'window', 80, 20, 'green', 'false')  </l>
+<l>        dev_display(Cross)</l>
+<l>        TupleResult := [1, Row, Col]  </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<l>* else</l>
+<l>*         dev_disp_message( 'No bottom Panle', 'window', 40, 20, 'green', 'false')</l>
+<l>*      TupleResult := -1000 </l>
+<l>* endif</l>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_4">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_calib">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_calib">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_calib2">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<c>*先赋值，以免发生异常后读取非法内存</c>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<c></c>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c></c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>if(Score&gt; 0.8)</l>
+<c>        *读取第一个ROI,圆环  </c>
+<l>        ReadRoiAnnularCircle (Directory +  '/T1_calib2.roi', RoiDataIn)</l>
+<c>        *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut) </l>
+<c>        *查找圆,方向outer指定由外向内,以大圆半径为中心,100个点,可排除20个干扰点,阈值5,</c>
+<c>        *平滑系数0.4, 由白到黑,取第一点</c>
+<l>        FindCircle (Image, RoiDataOut, 'inner', 100, 20, 5, 0.4,\
+                    'positive', 'first', Row, Col, Radius)</l>
+<c>        </c>
+<l>        if(|Row| = 0)</l>
+<l>            TupleResult := -998</l>
+<l>            return()</l>
+<l>        endif</l>
+<c>        </c>
+<l>        gen_cross_contour_xld(Cross,Row,Col,60,0.785398)</l>
+<c>        </c>
+<l>        dev_disp_message ('row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>        dev_disp_message ('col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>*         dev_disp_message( 'Angle= '+ Angle, 'window', 80, 20, 'green', 'false')  </l>
+<l>        dev_display(Cross)</l>
+<l>        TupleResult := [1, Row, Col]  </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<l>* else</l>
+<l>*         dev_disp_message( 'No bottom Panle', 'window', 40, 20, 'green', 'false')</l>
+<l>*      TupleResult := -1000 </l>
+<l>* endif</l>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_calib2">
+<parameters>
+<parameter id="Directory"/>
+<parameter id="Image"/>
+<parameter id="ModelData"/>
+<parameter id="ModelId"/>
+<parameter id="TupleResult"/>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_10">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_10">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_11">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_11">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_12">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_12">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_13">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_13">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_14">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_14">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_15">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_15">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_16">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_16">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_17">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_17">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_18">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_18">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_19">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_19">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_20">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_20">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_21">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_21">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_22">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_22">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_23">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_23">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_24">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_24">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+<procedure name="T1_25">
+<interface>
+<io>
+<par name="Image" base_type="iconic" dimension="0"/>
+</io>
+<ic>
+<par name="Directory" base_type="ctrl" dimension="0"/>
+<par name="ModelId" base_type="ctrl" dimension="0"/>
+<par name="ModelData" base_type="ctrl" dimension="0"/>
+</ic>
+<oc>
+<par name="TupleResult" base_type="ctrl" dimension="0"/>
+</oc>
+</interface>
+<body>
+<l>TupleResult := -999 </l>
+<c></c>
+<l>dev_set_draw ('margin')</l>
+<l>gen_rectangle1 (ROI_0, 0, 0, 2748, 3840)</l>
+<l>dev_display(ROI_0)</l>
+<l>reduce_domain(Image, ROI_0, ImageReduced)</l>
+<c> *进行模板查找</c>
+<l>FindTemplete (ImageReduced, ModelId, ModelData, Score, FixTool)</l>
+<l>     if(|Score| &gt; 0)</l>
+<c>         *读取第一个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Down.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin1, ColBegin1, RowEnd1, ColEnd1)        </l>
+<l>        if(|RowBegin1| = 0)</l>
+<l>          TupleResult := -998</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' TopLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd1, ColEnd1, RowBegin1, ColBegin1,  Angle)</l>
+<l>        Angle := deg(Angle)</l>
+<c>         </c>
+<c>         *读取第二个ROI,旋转矩形,带方向角度   </c>
+<l>        ReadRoiRectangle2 (Directory + '/Right.roi', RoiDataIn)</l>
+<c>         *根据模板查找的座标来转换ROI</c>
+<l>        TranslateRoi (FixTool, RoiDataIn, RoiDataOut)</l>
+<c>         *查找直线,位置由旋转矩形来确定,方向由ROI旋转矩形确定,100个点,</c>
+<c>         *阈值15,平滑系数0.4, 由黑到白,取第一个边缘点</c>
+<l>        FindLine (Image, RoiDataOut, 60, 30, 20, 10, 0.4, 'negative', 'first', RowBegin2, ColBegin2, RowEnd2, ColEnd2)         </l>
+<l>        if(|RowBegin2| = 0)</l>
+<l>          TupleResult := -997</l>
+<l>          dev_disp_message( 'Error= '+ TupleResult+' LeftLine Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>          return()</l>
+<l>        endif</l>
+<l>        angle_lx(RowEnd2, ColEnd2, RowBegin2, ColBegin2,  Angle2)</l>
+<l>        Angle2 := deg(Angle2)</l>
+<c>         </c>
+<l>        intersection_lines(RowBegin1, ColBegin1, RowEnd1, ColEnd1, RowBegin2, ColBegin2, RowEnd2, ColEnd2, Row, Col, IsOverlapping)</l>
+<c> </c>
+<l>        if(|Row| = 0)</l>
+<l>           TupleResult := -996</l>
+<l>           dev_disp_message( 'Error= '+ 'Center Find Fail!', 'window', 60, 20, 'red', 'false')</l>
+<l>        else</l>
+<l>           gen_cross_contour_xld(Cross, Row, Col, 60, 0.785398)</l>
+<l>           dev_display(Cross)</l>
+<l>           dev_disp_message( 'Row= '+ Row, 'window', 40, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Col= '+ Col, 'window', 60, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle= '+ Angle, 'window', 80, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2= '+ Angle2, 'window', 100, 20, 'green', 'false')</l>
+<l>           dev_disp_message ('Angle2-Angle= '+ (Angle2-Angle), 'window', 120, 20, 'green', 'false')</l>
+<c>           </c>
+<l>           TupleResult := [1, Row, Col, Angle]          </l>
+<l>        endif     </l>
+<l>     else</l>
+<c>          *模板查找失败</c>
+<l>          TupleResult := -999 </l>
+<l>     endif</l>
+<c></c>
+<l>return ()</l>
+<c></c>
+</body>
+<docu id="T1_25">
+<abstract lang="zh_CN">图像处理过程，函数内的过程可以添加修改。</abstract>
+<short lang="zh_CN">图像处理过程。</short>
+<parameters>
+<parameter id="Directory">
+<description lang="zh_CN">ROI文件路径。</description>
+<sem_type>string</sem_type>
+</parameter>
+<parameter id="Image">
+<description lang="zh_CN">输入图形变量。</description>
+<sem_type>image</sem_type>
+</parameter>
+<parameter id="ModelData">
+<description lang="zh_CN">模板的数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+<parameter id="ModelId">
+<description lang="zh_CN">模板的句柄。</description>
+<sem_type>integer</sem_type>
+</parameter>
+<parameter id="TupleResult">
+<description lang="zh_CN">得到的结果数据。</description>
+<sem_type>number</sem_type>
+</parameter>
+</parameters>
+</docu>
+</procedure>
+</hdevelop>
