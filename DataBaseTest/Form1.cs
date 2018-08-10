@@ -38,7 +38,7 @@ namespace DataBaseTest
                     textBox1.Text = "延时结束";
                 });
                 System.Diagnostics.Debug.WriteLine("结束延时");
-                //如果需要程序一启动就给轴上电，可以在此处添加代码
+                //如果需要程序一启动就给轴上电，可以在此处添加代码哦
                 //todo: tcp, com, vision
             };
             Task t1 = new Task(action, "");
